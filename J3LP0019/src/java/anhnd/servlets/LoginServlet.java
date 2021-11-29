@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpSession;
  */
 public class LoginServlet extends HttpServlet {
     
+    private static Logger log = Logger.getLogger(LoginServlet.class.getName());
     private static final String MEMBER_HOME = "member_home.jsp";
     private static final String ADMIN_MANAGE_PRODUCT = "admin_manage_cake.jsp";
     private static final String INVALID_PAGE = "invalid.html";
@@ -46,6 +48,7 @@ public class LoginServlet extends HttpServlet {
         try{
             AccountDAO dao = new AccountDAO();
             AccountDTO dto = dao.checkLogin(email, password);
+            log.debug("test log");
             if (dto != null) {
                 if (dto.getStatus() != 2) {
                     switch (dto.getRoleId()) {
@@ -70,7 +73,7 @@ public class LoginServlet extends HttpServlet {
                 }
             }
         }catch(Exception e){
-            System.out.println(e.toString());
+            e.printStackTrace();
         }finally{
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
