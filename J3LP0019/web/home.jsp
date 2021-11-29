@@ -22,6 +22,89 @@
     </head>
     <body>
         <a href="login.html">Go to login page</a>
-        
-    </body>
+        <c:set var="cakes" value="${sessionScope.CAKES}" />
+        <c:set var="totalPage" value="${sessionScope.TOTALPAGE}" />
+        <c:set var="categories" value="${sessionScope.CATEGORIES}" />
+        <c:set var="selectedCategoryId" value="${sessionScope.SELECTCATEGORY}"/>
+        <div class="container">
+            <h1>Welcome Guest!</h1>
+            <form action="searchCake" method="POST">
+                <input type="text" name="searchName" value="${param.searchName}"/>
+                <select name="categoryChoice">
+                    <c:forEach var="item" items="${categories}">
+                        <c:if test="${selectedCategoryId eq item.categoryId}">
+                            <option value="${item.categoryId}" selected="true">
+                                <c:out value="${item.categoryName}"/>
+                            </option>
+                        </c:if>
+                        <c:if test="${selectedCategoryId eq item.categoryId == false}">
+                            <option value="${item.categoryId}">
+                                <c:out value="${item.categoryName}"/>
+                            </option>
+                        </c:if>
+                    </c:forEach>
+                </select>
+                <input type="number" name="fromPrice" value="${param.fromPrice}"/> 
+                <input type="number" name="toPrice" value="${param.toPrice}"/>
+                <input type="hidden" name="urlForward" value="Search_Home"/>
+                <input type="submit" name="btAction" value="Search"/>
+            </form>
+            <c:if test="${not empty cakes}">
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Image</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Create Date</th>
+                            <th>Expiration Date</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <c:forEach var="dto" items="${cakes}" varStatus="counter">
+                        <tbody>
+                            <tr>
+                                <td>${dto.cakeName}</td>
+                                <td><c:if test="${not empty dto.imgPath}">
+                                        <img src="images/${dto.imgPath}" style="display:block; width:50px; height:50px;">
+                                    </c:if>
+                                    <c:if test="${empty dto.imgPath}">
+                                        <img src="images/notfound.jpg" style="display:block; width:50px; height:50px;">
+                                    </c:if></td>
+                                <td>${dto.description}</td>
+                                <td>${dto.quantity}</td>
+                                <td>${dto.price}</td>
+                                <td>${dto.createDate}</td>
+                                <td>${dto.expirationDate}</td>
+                                <c:forEach var="category" items="${categories}" varStatus="counter">
+                                    <c:if test="${category.categoryId eq dto.categoryId}">
+                                        <td>${category.categoryName}</td>
+                                    </c:if>
+                                </c:forEach>
+                            </tr>
+                        </tbody>
+                    </c:forEach>
+                </table>
+            </c:if>
+            <c:if test="${empty cakes}">
+                <h1>No record is matched !!!</h1>
+            </c:if>
+            <div>
+                <c:forEach begin="1" end="${totalPage}" var="i">
+                    <c:url var="currentPageLink" value="searchCake">
+                        <c:param name="page" value="${i}"/>
+                        <c:param name="searchName" value="${param.searchName}"/>
+                        <c:param name="fromPrice" value="${param.fromPrice}"/>
+                        <c:param name="toPrice" value="${param.toPrice}"/>
+                        <c:param name="categoryChoice" value="${sessionScope.SELECTCATEGORY}"/>
+                        <c:param name="urlForward" value="Search_Home"/>
+                    </c:url>
+                    <a id="${i}" style="margin-bottom: 50px" href="${currentPageLink}">${i}</a>
+                </c:forEach>
+            </div>
+        </div>
+    </div>
+</body>
 </html>

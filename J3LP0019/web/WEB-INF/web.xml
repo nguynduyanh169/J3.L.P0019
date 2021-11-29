@@ -16,9 +16,25 @@
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>anhnd.servlets.LoginServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SearchCakeServlet</servlet-name>
+        <servlet-class>anhnd.servlets.SearchCakeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoginGoogleServlet</servlet-name>
+        <servlet-class>anhnd.servlets.LoginGoogleServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchCakeServlet</servlet-name>
+        <url-pattern>/SearchCakeServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginGoogleServlet</servlet-name>
+        <url-pattern>/LoginGoogleServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

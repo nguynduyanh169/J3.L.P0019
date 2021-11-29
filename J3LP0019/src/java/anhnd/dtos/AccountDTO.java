@@ -5,11 +5,13 @@
  */
 package anhnd.dtos;
 
+import java.io.Serializable;
+
 /**
  *
  * @author anhnd
  */
-public class AccountDTO {
+public class AccountDTO implements Serializable{
     private String email;
     private String password;
     private String fullName;

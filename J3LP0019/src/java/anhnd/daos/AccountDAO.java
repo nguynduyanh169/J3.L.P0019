@@ -7,6 +7,7 @@ package anhnd.daos;
 
 import anhnd.dtos.AccountDTO;
 import anhnd.utils.DBUtils;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -60,4 +61,38 @@ public class AccountDAO {
         }
         return accountDTO;
     }
+    
+    public AccountDTO checkLoginWithGoogle(String email) throws NamingException, SQLException, NoSuchAlgorithmException {
+        AccountDTO dto = null;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = DBUtils.makeConnection();
+            if(connection != null) {
+                String sql = "Select email, fullname, phone, roleId, status from Account where email=?";
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, email);
+                resultSet = preparedStatement.executeQuery();
+                if(resultSet.next()) {
+                    String fullName = resultSet.getString("fullname");
+                    String phone = resultSet.getString("phone");
+                    int role = resultSet.getInt("roleId");
+                    int status = resultSet.getInt("status");
+                    dto = new AccountDTO(email, fullName, phone, role, status);
+                }
+            }
+        } finally {
+            if (resultSet != null) {
+                preparedStatement.close();
+            }
+            if (preparedStatement != null) {
+                connection.close();
+            }
+            if(connection != null){
+                resultSet.close();
+            }
+        }
+        return dto;
+    } 
 }
