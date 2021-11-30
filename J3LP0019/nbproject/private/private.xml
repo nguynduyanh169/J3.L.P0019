@@ -3,12 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/anhnd/Documents/LabWeb/J3.L.P0019/J3LP0019/src/java/anhnd/utils/GoogleUtils.java</file>
-            <file>file:/C:/Users/anhnd/Documents/LabWeb/J3.L.P0019/J3LP0019/web/login.html</file>
-            <file>file:/C:/Users/anhnd/Documents/LabWeb/J3.L.P0019/J3LP0019/src/java/anhnd/utils/Constant.java</file>
-            <file>file:/C:/Users/anhnd/Documents/LabWeb/J3.L.P0019/J3LP0019/src/java/anhnd/daos/AccountDAO.java</file>
-            <file>file:/C:/Users/anhnd/Documents/LabWeb/J3.L.P0019/J3LP0019/src/java/anhnd/utils/GooglePojo.java</file>
-            <file>file:/C:/Users/anhnd/Documents/LabWeb/J3.L.P0019/J3LP0019/src/java/anhnd/servlets/LoginGoogleServlet.java</file>
+            <file>file:/C:/Users/anhnd/Documents/LabWeb/J3.L.P0019/J3LP0019/src/java/anhnd/servlets/CreateCakeServlet.java</file>
+            <file>file:/C:/Users/anhnd/Documents/LabWeb/J3.L.P0019/J3LP0019/src/java/anhnd/dtos/CakeErrorObj.java</file>
+            <file>file:/C:/Users/anhnd/Documents/LabWeb/J3.L.P0019/J3LP0019/web/admin_create_cake.jsp</file>
         </group>
     </open-files>
 </project-private>

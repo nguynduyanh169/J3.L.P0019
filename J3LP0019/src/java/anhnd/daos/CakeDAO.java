@@ -89,13 +89,13 @@ public class CakeDAO {
             }
         } finally {
             if (resultSet != null) {
-                preparedStatement.close();
+                resultSet.close();
             }
             if (preparedStatement != null) {
-                connection.close();
+                preparedStatement.close();
             }
             if (connection != null) {
-                resultSet.close();
+                connection.close();
             }
         }
         return result;
@@ -134,16 +134,50 @@ public class CakeDAO {
             }
         } finally {
             if (resultSet != null) {
-                preparedStatement.close();
+                resultSet.close();
             }
             if (preparedStatement != null) {
-                connection.close();
+                preparedStatement.close();
             }
             if (connection != null) {
-                resultSet.close();
+                connection.close();
             }
         }
 
         return result;
+    }
+
+    public boolean insertCake(CakeDTO cakeDTO) throws NamingException, SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        boolean check = false;
+        try {
+            connection = DBUtils.makeConnection();
+            String sql = "Insert into Cake (cakeId, cakeName, imgPath, categoryId, quantity, description, price, createDate, expirationDate, status, createBy)"
+                    + " values(?, ?, ?, ?, ?, ?, ?, CAST( GETDATE() AS date), ?, 0, ?)";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, cakeDTO.getCakeId());
+            preparedStatement.setString(2, cakeDTO.getCakeName());
+            preparedStatement.setString(3, cakeDTO.getImgPath());
+            preparedStatement.setString(4, cakeDTO.getCategoryId());
+            preparedStatement.setInt(5, cakeDTO.getQuantity());
+            preparedStatement.setString(6, cakeDTO.getDescription());
+            preparedStatement.setFloat(7, cakeDTO.getPrice());
+            preparedStatement.setDate(8, cakeDTO.getExpirationDate());
+            preparedStatement.setString(9, cakeDTO.getCreateBy());
+            int row = preparedStatement.executeUpdate();
+            if (row > 0) {
+                check = true;
+            }
+        } finally {
+
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return check;
     }
 }
