@@ -180,4 +180,80 @@ public class CakeDAO {
         }
         return check;
     }
+    
+    public boolean updateCake(CakeDTO cakeDTO) throws NamingException, SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        boolean check = false;
+        try {
+            connection = DBUtils.makeConnection();
+            String sql = "Update Cake set cakeName = ?, imgPath = ?, categoryId = ?, quantity = ?, description = ?, price = ?, expirationDate = ?"
+                    + " where cakeId = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, cakeDTO.getCakeName());
+            preparedStatement.setString(2, cakeDTO.getImgPath());
+            preparedStatement.setString(3, cakeDTO.getCategoryId());
+            preparedStatement.setInt(4, cakeDTO.getQuantity());
+            preparedStatement.setString(5, cakeDTO.getDescription());
+            preparedStatement.setFloat(6, cakeDTO.getPrice());
+            preparedStatement.setDate(7, cakeDTO.getExpirationDate());
+            preparedStatement.setString(8, cakeDTO.getCakeId());
+            int row = preparedStatement.executeUpdate();
+            if (row > 0) {
+                check = true;
+            }
+        } finally {
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return check;
+    }
+    
+    
+    public CakeDTO getCakeById(String id) throws SQLException, NamingException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        CakeDTO result = null;
+        try {
+            connection = DBUtils.makeConnection();
+            if (connection != null) {
+                String sql = "Select cakeId, cakeName, imgPath, categoryId, quantity, description, price, createDate, expirationDate, status, createBy from Cake"
+                        + " where cakeId = ?";
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, id);
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    String cakeId = resultSet.getString("cakeId");
+                    String cakeName = resultSet.getString("cakeName");
+                    String imgPath = resultSet.getString("imgPath");
+                    String categoryId = resultSet.getString("categoryId");
+                    int quantity = resultSet.getInt("quantity");
+                    String description = resultSet.getString("description");
+                    float price = resultSet.getFloat("price");
+                    Date createDate = resultSet.getDate("createDate");
+                    Date expirationDate = resultSet.getDate("expirationDate");
+                    int status = resultSet.getInt("status");
+                    String createBy = resultSet.getString("createBy");
+                    result = new CakeDTO(cakeId, cakeName, imgPath, categoryId, quantity, description, price, createDate, expirationDate, status, createBy);
+
+                }
+            }
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return result;
+    }
 }

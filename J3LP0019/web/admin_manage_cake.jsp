@@ -34,7 +34,7 @@
             <c:url var="createCakeLink" value="addNewCake"/>
             <a style="margin:5px" href="${createCakeLink}">Create New Cake</a>
             <br/>
-            <form action="searchCake" method="POST">
+            <form action="searchCake" method="GET">
                 <input type="text" name="searchName" value="${param.searchName}"/> 
                 <select name="categoryChoice">
                     <c:forEach var="item" items="${categories}">
@@ -68,7 +68,7 @@
                             <th>Create Date</th>
                             <th>Expiration Date</th>
                             <th>Type</th>
-                            <td>View Details</td>
+                            <td>Action</td>
                         </tr>
                     </thead>
                     <c:forEach var="dto" items="${cakes}" varStatus="counter">
@@ -94,7 +94,7 @@
                                 <c:url var="editCakeLink" value="editCake">
                                     <c:param name="cakeId" value="${dto.cakeId}"/>
                                 </c:url>
-                                <td><a href="${editCakeLink}">View Details</a></td>
+                                <td><a href="${editCakeLink}">Edit</a></td>
                             </tr>
                         </tbody>
                     </c:forEach>
