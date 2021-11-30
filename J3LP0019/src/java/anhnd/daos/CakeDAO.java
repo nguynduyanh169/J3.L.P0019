@@ -187,7 +187,7 @@ public class CakeDAO {
         boolean check = false;
         try {
             connection = DBUtils.makeConnection();
-            String sql = "Update Cake set cakeName = ?, imgPath = ?, categoryId = ?, quantity = ?, description = ?, price = ?, expirationDate = ?"
+            String sql = "Update Cake set cakeName = ?, imgPath = ?, categoryId = ?, quantity = ?, description = ?, price = ?, expirationDate = ?, status = ?"
                     + " where cakeId = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, cakeDTO.getCakeName());
@@ -197,7 +197,8 @@ public class CakeDAO {
             preparedStatement.setString(5, cakeDTO.getDescription());
             preparedStatement.setFloat(6, cakeDTO.getPrice());
             preparedStatement.setDate(7, cakeDTO.getExpirationDate());
-            preparedStatement.setString(8, cakeDTO.getCakeId());
+            preparedStatement.setInt(8, cakeDTO.getStatus());
+            preparedStatement.setString(9, cakeDTO.getCakeId());
             int row = preparedStatement.executeUpdate();
             if (row > 0) {
                 check = true;

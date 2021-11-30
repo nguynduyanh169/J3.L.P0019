@@ -58,6 +58,7 @@ public class UpdateCakeServlet extends HttpServlet {
         String quantityStr = request.getParameter("txtQuantity");
         String categoryId = request.getParameter("categoryChoice");
         String expirationDate = request.getParameter("txtExpirationDate");
+        String statusStr = request.getParameter("statusChoice");
         Part imagePart = request.getPart("imageFile");
         String url = ADMIN_UPDATE_PRODUCT;
         CakeErrorObj errObj = new CakeErrorObj();
@@ -128,21 +129,23 @@ public class UpdateCakeServlet extends HttpServlet {
                     fullPathBuild = fullPathBuild.substring(1);
                     String savePostImageToBuild = fullPathBuild.replace("/", "\\") + File.separator + "images" + File.separator + fileImageName;
                     imagePart.write(savePostImageToBuild);
-                    CakeDTO cakeDTO = new CakeDTO(cakeId, cakeName, fileImageName, categoryId, quantity, description, price, null, expiration, 0, email);
+                    CakeDTO cakeDTO = new CakeDTO(cakeId, cakeName, fileImageName, categoryId, quantity, description, price, null, expiration, Integer.parseInt(statusStr), email);
                     boolean result = cakeDAO.updateCake(cakeDTO);
                     if (result) {
                         UpdateRecordDTO updateRecordDTO = new UpdateRecordDTO(TextUtils.getUUID(), email, cakeId, null);
                         updateRecordDAO.insertEditCakeHistory(updateRecordDTO);
-                        url = ADMIN_MANAGE;
+                        //url = ADMIN_MANAGE;
+                        url = "SearchCakeServlet?searchName=&fromPrice=&toPrice=&urlForward=Search_Admin&btAction=Search";
                     }
                 }
                 if (fileImageName.equals("")) {
-                    CakeDTO cakeDTO = new CakeDTO(cakeId, cakeName, "", categoryId, quantity, description, price, null, expiration, 0, email);
+                    CakeDTO cakeDTO = new CakeDTO(cakeId, cakeName, "", categoryId, quantity, description, price, null, expiration, Integer.parseInt(statusStr), email);
                     boolean result = cakeDAO.updateCake(cakeDTO);
                     if (result) {
                         UpdateRecordDTO updateRecordDTO = new UpdateRecordDTO(TextUtils.getUUID(), email, cakeId, null);
                         updateRecordDAO.insertEditCakeHistory(updateRecordDTO);
-                        url = ADMIN_MANAGE;
+                       // url = ADMIN_MANAGE;
+                       url = "SearchCakeServlet?searchName=&fromPrice=&toPrice=&urlForward=Search_Admin&btAction=Search";
                     }
                 }
             }
