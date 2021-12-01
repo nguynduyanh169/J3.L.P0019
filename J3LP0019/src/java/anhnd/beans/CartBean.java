@@ -12,7 +12,7 @@ import java.util.HashMap;
  *
  * @author anhnd
  */
-public class CartBean extends HashMap {
+public class CartBean extends HashMap<String, CartModel> {
 
     public CartBean() {
         super();
@@ -47,5 +47,5 @@ public class CartBean extends HashMap {
         }
         return false;
     }
-   
+    
 }

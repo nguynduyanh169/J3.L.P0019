@@ -34,7 +34,7 @@ public class AccountDAO {
             if(connection != null){
                 connection = DBUtils.makeConnection();
             if(connection != null) {
-                String sql = "Select email, fullname, phone, roleId, status from Account where email=? and password=?";
+                String sql = "Select email, fullname, address, phone, roleId, status from Account where email=? and password=?";
                 preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, email);
                 preparedStatement.setString(2, password);
@@ -44,7 +44,8 @@ public class AccountDAO {
                     String phone = resultSet.getString("phone");
                     int role = resultSet.getInt("roleId");
                     int status = resultSet.getInt("status");
-                    accountDTO = new AccountDTO(email, fullName, phone, role, status);
+                    String address = resultSet.getString("address");
+                    accountDTO = new AccountDTO(email, fullName, phone, role, status, address);
                 }
             }
             }
@@ -70,7 +71,7 @@ public class AccountDAO {
         try {
             connection = DBUtils.makeConnection();
             if(connection != null) {
-                String sql = "Select email, fullname, phone, roleId, status from Account where email=?";
+                String sql = "Select email, fullname,address, phone, roleId, status from Account where email=?";
                 preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, email);
                 resultSet = preparedStatement.executeQuery();
@@ -79,7 +80,8 @@ public class AccountDAO {
                     String phone = resultSet.getString("phone");
                     int role = resultSet.getInt("roleId");
                     int status = resultSet.getInt("status");
-                    dto = new AccountDTO(email, fullName, phone, role, status);
+                    String address = resultSet.getString("address");
+                    dto = new AccountDTO(email, fullName, phone, role, status, address);
                 }
             }
         } finally {

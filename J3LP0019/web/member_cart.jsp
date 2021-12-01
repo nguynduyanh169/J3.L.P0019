@@ -30,8 +30,8 @@
                 <form action="cart" method="POST">
                     <c:forEach var="rows" items="${shop}">
                         <tr>
-                            <td>${rows.value.cakeName}</td>
-                            <td><input type="number" name="txtQuantity" min="1" required value="${rows.value.quantity}"></td>
+                            <td>${rows.value.cakeId}</td>
+                            <td><input type="number" name="txtQuantity${rows.value.cakeId}" min="1" required value="${rows.value.quantity}"></td>
                             <td>${rows.value.price}</td>
                             <td>
                                 <input type="hidden" name="cakeId" value="${rows.value.cakeId}"/>
@@ -47,6 +47,10 @@
                     <tr>
                         <td colspan="4"></td>
                         <td><input type="submit" value="Remove" name="action"/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td><input type="submit" value="Order" name="action"/></td>
                     </tr>
                 </form>
             </tbody>

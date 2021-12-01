@@ -6,9 +6,18 @@
 package anhnd.servlets;
 
 import anhnd.beans.CartBean;
+import anhnd.daos.OrderDAO;
+import anhnd.daos.OrderDetailDAO;
+import anhnd.dtos.AccountDTO;
 import anhnd.dtos.CartModel;
+import anhnd.dtos.OrderDTO;
+import anhnd.dtos.OrderDetailDTO;
+import anhnd.utils.CartUtils;
+import anhnd.utils.TextUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -75,8 +84,7 @@ public class CartServlet extends HttpServlet {
                 rd.forward(request, response);
             } else if (action.equals("Update")) {
                 String cakeId = request.getParameter("cakeId");
-                String newQuantity = request.getParameter("txtQuantity");
-                System.out.println(newQuantity);
+                String newQuantity = request.getParameter("txtQuantity" + cakeId);
                 System.out.println(cakeId);
                 HttpSession session = request.getSession();
                 if (session != null) {
@@ -87,6 +95,29 @@ public class CartServlet extends HttpServlet {
                     }
                 }
                 RequestDispatcher rd = request.getRequestDispatcher("CartServlet?action=View cart");
+                rd.forward(request, response);
+            } else if (action.equals("Order")) {
+                HttpSession session = request.getSession();
+                OrderDAO orderDAO = new OrderDAO();
+                OrderDetailDAO orderDetailDAO = new OrderDetailDAO();
+                if (session != null) {
+                    CartBean shop = (CartBean) session.getAttribute("SHOP");
+                    if (shop != null) {
+                        AccountDTO account = (AccountDTO) session.getAttribute("ACCOUNT");
+                        OrderDTO orderDTO = new OrderDTO(TextUtils.getUUID(), account.getEmail(), account.getAddress(), account.getPhone(), 0, null);
+                        System.out.println(orderDTO);
+                        boolean check = orderDAO.insertOrder(orderDTO);
+                        if(check){
+                            List<CartModel> items = CartUtils.getAllCart(shop);
+                            for (CartModel item : items) {
+                                 OrderDetailDTO orderDetailDTO = new OrderDetailDTO(TextUtils.getUUID(), orderDTO.getOrderId(), item.getCakeId(), item.getCakeName(), item.getQuantity(), item.getPrice());
+                                 orderDetailDAO.insertOrderDetails(orderDetailDTO);
+                            }
+                        }
+                        session.removeAttribute("SHOP");
+                    }
+                }
+                RequestDispatcher rd = request.getRequestDispatcher("SearchCakeServlet?searchName=&fromPrice=&toPrice=&urlForward=Search_Member&btAction=Search");
                 rd.forward(request, response);
             }
         } catch (Exception e) {

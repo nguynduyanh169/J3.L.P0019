@@ -37,7 +37,7 @@
 
             <a href="${viewCartLink}">View Cart</a>
             <br/>
-            <form action="searchCake" method="POST">
+            <form action="searchCake" method="GET">
                 <input type="text" name="searchName" value="${param.searchName}"/> 
                 <select name="categoryChoice">
                     <c:forEach var="item" items="${categories}">
