@@ -10,7 +10,10 @@ import anhnd.dtos.OrderDetailDTO;
 import anhnd.utils.DBUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.naming.NamingException;
 
 /**
@@ -51,5 +54,41 @@ public class OrderDetailDAO {
             }
         }
         return check;
+    }
+    
+    public List<OrderDetailDTO> getDetailsOfOrder(String orderId) throws SQLException, NamingException{
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        OrderDetailDTO orderDetailDTO = null;
+        List<OrderDetailDTO> result = null;
+        try {
+            connection = DBUtils.makeConnection();
+            String sql = "Select orderDetailId, cakeId, cakeName, quantity, price from OrderDetail where orderId = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, orderId);
+            resultSet = preparedStatement.executeQuery();
+            result = new ArrayList<>();
+            while (resultSet.next()) {                
+                String orderDetailId = resultSet.getString("orderDetailId");
+                String cakeId = resultSet.getString("cakeId");
+                String cakeName = resultSet.getString("cakeName");
+                int quantity = resultSet.getInt("quantity");
+                float price = resultSet.getFloat("price");
+                orderDetailDTO = new OrderDetailDTO(orderDetailId, orderId, cakeId, cakeName, quantity, price);
+                result.add(orderDetailDTO);
+            }
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return result;
     }
 }

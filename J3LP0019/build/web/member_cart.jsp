@@ -11,10 +11,16 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Shopping Cart Page</title>
+        <script>
+            function confirmDelete() {
+                confirm("Confirm remove this!");
+            }
+        </script>
     </head>
     <body>
         <h1>Your Shopping Cart!</h1>
         <c:set var="shop" value="${sessionScope.SHOP}"/>
+        <c:set var="errorMsg" value="${requestScope.QUANTITYERROR}"/>
         <c:if test="${not empty shop}">
             <table border="1">
                 <thead>
@@ -22,43 +28,37 @@
                         <th>Name</th>
                         <th>Quantity</th>
                         <th>Price</th>
-                        <th></th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                <form action="cart" method="POST">
+
                     <c:forEach var="rows" items="${shop}">
                         <tr>
-                            <td>${rows.value.cakeId}</td>
-                            <td><input type="number" name="txtQuantity${rows.value.cakeId}" min="1" required value="${rows.value.quantity}"></td>
+                            <td>${rows.value.cakeName}</td>
+                            <td><form action="cart" method="POST">
+                                    <input type="hidden" name="cakeId" value="${rows.value.cakeId}"/>
+                                    <input type="number" name="txtQuantity" min="1" required value="${rows.value.quantity}">
+                                    <input type="submit" value="Update" name="action"/> <input type="submit" value="Remove" onclick="return confirmDelete()" name="action"/></form></td>
+
                             <td>${rows.value.price}</td>
-                            <td>
-                                <input type="hidden" name="cakeId" value="${rows.value.cakeId}"/>
-                                <input type="submit" value="Update" name="action"/>
-                            </td>
-                            <td>
-                                <input type="checkbox" name="rmv" value="${rows.value.cakeId}" />
-                            </td>
                         </tr>
                     </c:forEach>
                     <tr>
                     </tr>
                     <tr>
-                        <td colspan="4"></td>
-                        <td><input type="submit" value="Remove" name="action"/></td>
+                        <td colspan="2"></td>
+                        <td><form action="cart" method="POST"><input type="submit" value="Order" name="action"/></form></td>
                     </tr>
-                    <tr>
-                        <td colspan="4"></td>
-                        <td><input type="submit" value="Order" name="action"/></td>
-                    </tr>
-                </form>
-            </tbody>
-        </table>
 
-    </c:if>
-    <c:if test="${empty shop}">
-        <h1>No Item !!!</h1>
-    </c:if>
-</body>
+                </tbody>
+            </table>
+
+        </c:if>
+        <c:if test="${empty shop}">
+            <h1>No Item !!!</h1>
+        </c:if>
+        <c:if test="${not empty errorMsg}">
+            <h1>${errorMsg}</h1>
+        </c:if>
+    </body>
 </html>

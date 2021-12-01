@@ -6,6 +6,7 @@
 package anhnd.beans;
 
 import anhnd.dtos.CartModel;
+import anhnd.utils.CartUtils;
 import java.util.HashMap;
 
 /**
@@ -39,6 +40,7 @@ public class CartBean extends HashMap<String, CartModel> {
     }
 
     public boolean updateCake(String id, int newQuantity) {
+        System.out.println(id + "| " + newQuantity);
         if (this.containsKey(id)) {
              float price = ((CartModel) this.get(id)).getPricePerCake();
             ((CartModel) this.get(id)).setQuantity(newQuantity);
@@ -46,6 +48,10 @@ public class CartBean extends HashMap<String, CartModel> {
             return true;
         }
         return false;
+    }
+    
+    public float caculateTotalPrice(){
+        return CartUtils.caculateTotalPrice(this);
     }
     
 }

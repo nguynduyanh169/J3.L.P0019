@@ -180,7 +180,7 @@ public class CakeDAO {
         }
         return check;
     }
-    
+
     public boolean updateCake(CakeDTO cakeDTO) throws NamingException, SQLException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -213,8 +213,7 @@ public class CakeDAO {
         }
         return check;
     }
-    
-    
+
     public CakeDTO getCakeById(String id) throws SQLException, NamingException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -256,5 +255,66 @@ public class CakeDAO {
             }
         }
         return result;
+    }
+
+    public boolean checkCakeQuantity(String cakeId, int cakeQuantity) throws SQLException, NamingException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        boolean check = true;
+        try {
+            connection = DBUtils.makeConnection();
+            if (connection != null) {
+                String sql = "Select quantity from Cake"
+                        + " where cakeId = ?";
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, cakeId);
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    int quantity = resultSet.getInt("quantity");
+                    if (quantity < cakeQuantity) {
+                        check = false;
+                    }
+                }
+            }
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return check;
+    }
+
+    public boolean updateQuantity(String cakeId, int newQuantity) throws SQLException, NamingException {
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        boolean check = false;
+        try {
+            connection = DBUtils.makeConnection();
+            String sql = "Update Cake set quantity = ?"
+                    + " where cakeId = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setFloat(1, newQuantity);
+            preparedStatement.setString(2, cakeId);
+            int row = preparedStatement.executeUpdate();
+            if (row > 0) {
+                check = true;
+            }
+        } finally {
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return check;
     }
 }

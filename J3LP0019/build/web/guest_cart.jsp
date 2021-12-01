@@ -1,6 +1,6 @@
 <%-- 
-    Document   : cart
-    Created on : Nov 30, 2021, 7:43:15 PM
+    Document   : guest_cart
+    Created on : Dec 1, 2021, 7:04:31 PM
     Author     : anhnd
 --%>
 
@@ -11,11 +11,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Shopping Cart Page</title>
-        <script>
-            function confirmDelete() {
-                confirm("Confirm remove this!");
-            }
-        </script>
     </head>
     <body>
         <h1>Your Shopping Cart!</h1>
@@ -38,7 +33,7 @@
                             <td><form action="cart" method="POST">
                                     <input type="hidden" name="cakeId" value="${rows.value.cakeId}"/>
                                     <input type="number" name="txtQuantity" min="1" required value="${rows.value.quantity}">
-                                    <input type="submit" value="Update" name="action"/> <input type="submit" value="Remove" onclick="return confirmDelete()" name="action"/></form></td>
+                                    <input type="submit" value="Update" name="action"/> <input type="submit" value="Remove" name="action"/></form></td>
 
                             <td>${rows.value.price}</td>
                         </tr>
@@ -52,13 +47,14 @@
 
                 </tbody>
             </table>
+        </c:if>
+    <c:if test="${empty shop}">
+        <h1>No Item !!!</h1>
+    </c:if>
 
-        </c:if>
-        <c:if test="${empty shop}">
-            <h1>No Item !!!</h1>
-        </c:if>
-        <c:if test="${not empty errorMsg}">
-            <h1>${errorMsg}</h1>
-        </c:if>
-    </body>
+    <c:if test="${not empty errorMsg}">
+        <h1>${errorMsg}</h1>
+    </c:if>
+</body>
 </html>
+

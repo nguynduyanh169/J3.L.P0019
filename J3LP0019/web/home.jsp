@@ -28,6 +28,12 @@
         <c:set var="selectedCategoryId" value="${sessionScope.SELECTCATEGORY}"/>
         <div class="container">
             <h1>Welcome Guest!</h1>
+             <br/>
+            <c:url var="viewCartLink" value="cart">
+                <c:param name="action" value="Guest view cart"/>
+            </c:url>         
+            <a href="${viewCartLink}">View Cart</a>
+            <br/>
             <form action="searchCake" method="POST">
                 <input type="text" name="searchName" value="${param.searchName}"/>
                 <select name="categoryChoice">
@@ -61,6 +67,7 @@
                             <th>Create Date</th>
                             <th>Expiration Date</th>
                             <th>Category</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <c:forEach var="dto" items="${cakes}" varStatus="counter">
@@ -83,6 +90,14 @@
                                         <td>${category.categoryName}</td>
                                     </c:if>
                                 </c:forEach>
+                               <c:url var="addToCartLink" value="cart">
+                                    <c:param name="cakeId" value="${dto.cakeId}"/>
+                                    <c:param name="cakeName" value="${dto.cakeName}"/>
+                                    <c:param name="price" value="${dto.price}"/>
+                                    <c:param name="quantity" value="${dto.quantity}"/>
+                                    <c:param name="action" value="Guest add to cart"/>
+                                </c:url>
+                               <td><a href="${addToCartLink}">Add To Cart</a></td>
                             </tr>
                         </tbody>
                     </c:forEach>

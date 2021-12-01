@@ -48,6 +48,10 @@
         <servlet-name>CartServlet</servlet-name>
         <servlet-class>anhnd.servlets.CartServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GetOrderServlet</servlet-name>
+        <servlet-class>anhnd.servlets.GetOrderServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -83,6 +87,10 @@
     <servlet-mapping>
         <servlet-name>CartServlet</servlet-name>
         <url-pattern>/CartServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetOrderServlet</servlet-name>
+        <url-pattern>/GetOrderServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

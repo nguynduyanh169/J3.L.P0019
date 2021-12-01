@@ -6,40 +6,37 @@
 package anhnd.daos;
 
 import anhnd.dtos.OrderDTO;
-import anhnd.dtos.OrderDetailDTO;
+import anhnd.dtos.PaymentDTO;
 import anhnd.utils.DBUtils;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import javax.naming.NamingException;
 
 /**
  *
  * @author anhnd
  */
-public class OrderDAO {
+public class PaymentDAO {
 
-    public OrderDAO() {
+    public PaymentDAO() {
     }
     
-    
-    public boolean insertOrder(OrderDTO orderDTO) throws SQLException, NamingException{
+    public boolean insertPayment(PaymentDTO paymentDTO) throws NamingException, SQLException{
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         boolean check = false;
         try {
             connection = DBUtils.makeConnection();
-            String sql = "Insert into OrderCake (orderId, orderBy, shipAddress, phone, status, orderDate)"
-                    + " values(?, ?, ?, ?, ?, CAST( GETDATE() AS date))";
+            String sql = "Insert into Payment (paymentId, orderId, status, method)"
+                    + " values(?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, orderDTO.getOrderId());
-            preparedStatement.setString(2, orderDTO.getOrderBy());
-            preparedStatement.setString(3, orderDTO.getShipAddress());
-            preparedStatement.setString(4, orderDTO.getPhone());
-            preparedStatement.setInt(5, orderDTO.getStatus());
+            preparedStatement.setString(1, paymentDTO.getPaymentId());
+            preparedStatement.setString(2, paymentDTO.getOrderId());
+            preparedStatement.setInt(3, paymentDTO.getStatus());
+            preparedStatement.setString(4, paymentDTO.getMethod());
             int row = preparedStatement.executeUpdate();
             if(row > 0 ){
                 check = true;
@@ -56,24 +53,22 @@ public class OrderDAO {
         return check;
     }
     
-    public OrderDTO getOrderById(String orderId) throws SQLException, NamingException{
+    public PaymentDTO getPaymentByOrderId(String orderId) throws NamingException, SQLException{
          Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        OrderDTO orderDTO = null;
+        PaymentDTO paymentDTO = null;
         try{
             connection = DBUtils.makeConnection();
-            String sql = "Select orderBy, shipAddress, phone, status, orderDate from OrderCake where orderId = ?";
+            String sql = "Select paymentId, status, method from Payment where orderId = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, orderId);
             resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
-                String orderBy = resultSet.getString("orderBy");
-                String shipAddress = resultSet.getString("shipAddress");
-                String phone = resultSet.getString("phone");
+                String paymentId = resultSet.getString("paymentId");
                 int status = resultSet.getInt("status");
-                Date orderDate = resultSet.getDate("orderDate");
-                orderDTO = new OrderDTO(orderId, orderBy, shipAddress, phone, status, orderDate);
+                String method = resultSet.getString("method");
+                paymentDTO = new PaymentDTO(paymentId, orderId, status, method);
             }
         }finally {
             if (resultSet != null) {
@@ -86,6 +81,6 @@ public class OrderDAO {
                 connection.close();
             }
         }
-        return orderDTO;
+        return paymentDTO;
     }
 }

@@ -17,6 +17,7 @@ public class CartModel implements Serializable{
     private float price;
     private float pricePerCake;
     private int quantity; 
+    private int currentQuantity;
 
     public String getCakeId() {
         return cakeId;
@@ -50,12 +51,13 @@ public class CartModel implements Serializable{
         this.quantity = quantity;
     }
 
-    public CartModel(String cakeId, String cakeName, float price, float pricePerCake) {
+    public CartModel(String cakeId, String cakeName, float price, float pricePerCake, int currentQuantity) {
         this.cakeId = cakeId;
         this.cakeName = cakeName;
         this.price = price;
         this.pricePerCake = pricePerCake;
         this.quantity = 1;
+        this.currentQuantity = currentQuantity;
     }
 
     public float getPricePerCake() {
@@ -64,6 +66,14 @@ public class CartModel implements Serializable{
 
     public void setPricePerCake(float pricePerCake) {
         this.pricePerCake = pricePerCake;
+    }
+
+    public int getCurrentQuantity() {
+        return currentQuantity;
+    }
+
+    public void setCurrentQuantity(int currentQuantity) {
+        this.currentQuantity = currentQuantity;
     }
 
     

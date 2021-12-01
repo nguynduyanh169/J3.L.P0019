@@ -25,5 +25,17 @@ public class CartUtils {
         return values;
 
     }
+    
+    public static float caculateTotalPrice(HashMap<String, CartModel> map) {
+        float totalPrice = 0;
+        for (CartModel item : map.values()) {
+            totalPrice = totalPrice + item.getPrice();
+        }
+
+        return totalPrice;
+
+    }
+    
+    
 }
 

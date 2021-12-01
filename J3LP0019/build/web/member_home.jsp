@@ -28,14 +28,19 @@
         <form action="logout" method="POST">
             <input type="submit" value="Logout" name="btAction"/>
         </form>
+
         <div class="container">
             <h1>Welcome <c:out value="${sessionScope.ACCOUNT.fullName}"/>!</h1>
             <br/>
             <c:url var="viewCartLink" value="cart">
                 <c:param name="action" value="View cart"/>
-            </c:url>
-
+            </c:url>         
             <a href="${viewCartLink}">View Cart</a>
+            <br/>
+            <form action="getOrder" method="POST">
+                <input type="text" name="orderId"/>
+                <input type="submit" name="btAction" value="Get"/>
+            </form>
             <br/>
             <form action="searchCake" method="GET">
                 <input type="text" name="searchName" value="${param.searchName}"/> 
@@ -98,6 +103,7 @@
                                     <c:param name="cakeId" value="${dto.cakeId}"/>
                                     <c:param name="cakeName" value="${dto.cakeName}"/>
                                     <c:param name="price" value="${dto.price}"/>
+                                    <c:param name="quantity" value="${dto.quantity}"/>
                                     <c:param name="action" value="Add to cart"/>
                                 </c:url>
                                 <td><a href="${addToCartLink}">Add To Cart</a></td>
