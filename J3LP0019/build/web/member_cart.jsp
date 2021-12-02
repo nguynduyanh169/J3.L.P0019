@@ -12,8 +12,16 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Shopping Cart Page</title>
         <script>
-            function confirmDelete() {
-                confirm("Confirm remove this!");
+            function confirmDelete(button) {
+                var href = button.getAttribute("href");
+                console.log(href);
+                var result = confirm("Delete this cake out of your cart?");
+
+                if (result) {
+                    window.location.href = href;
+                } else {
+                    return false;
+                }
             }
         </script>
     </head>
@@ -35,10 +43,11 @@
                     <c:forEach var="rows" items="${shop}">
                         <tr>
                             <td>${rows.value.cakeName}</td>
-                            <td><form action="cart" method="POST">
+                            <td><form action="cart" method="GET">
                                     <input type="hidden" name="cakeId" value="${rows.value.cakeId}"/>
                                     <input type="number" name="txtQuantity" min="1" required value="${rows.value.quantity}">
-                                    <input type="submit" value="Update" name="action"/> <input type="submit" value="Remove" onclick="return confirmDelete()" name="action"/></form></td>
+                                    <input type="submit" value="Update" name="action"/> 
+                                    <button href="${pageContext.request.contextPath}/CartServlet?action=Remove&cakeId=${rows.value.cakeId}" onclick="return confirmDelete(this)" name="action" value="Remove" >Remove</button></form></td>
 
                             <td>${rows.value.price}</td>
                         </tr>

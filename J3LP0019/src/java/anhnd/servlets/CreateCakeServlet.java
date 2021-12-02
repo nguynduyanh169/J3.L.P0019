@@ -128,14 +128,14 @@ public class CreateCakeServlet extends HttpServlet {
                     CakeDTO cakeDTO = new CakeDTO(TextUtils.getUUID(), cakeName, fileImageName, categoryId, quantity, description, price, null, expiration, 0, email);
                     boolean result = cakeDAO.insertCake(cakeDTO);
                     if (result) {
-                        url = ADMIN_MANAGE;
+                        url = "SearchCakeServlet?searchName=&fromPrice=&toPrice=&urlForward=Search_Admin&btAction=Search";
                     }
                 }
                 if (fileImageName.equals("")) {
                     CakeDTO cakeDTO = new CakeDTO(TextUtils.getUUID(), cakeName, "", categoryId, quantity, description, price, null, expiration, 0, email);
                     boolean result = cakeDAO.insertCake(cakeDTO);
                     if (result) {
-                        url = ADMIN_MANAGE;
+                        url = "SearchCakeServlet?searchName=&fromPrice=&toPrice=&urlForward=Search_Admin&btAction=Search";
                     }
                 }
             }

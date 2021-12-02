@@ -12,6 +12,7 @@ import anhnd.daos.OrderDetailDAO;
 import anhnd.daos.PaymentDAO;
 import anhnd.dtos.AccountDTO;
 import anhnd.dtos.CartModel;
+import anhnd.dtos.ConfirmOrderError;
 import anhnd.dtos.OrderDTO;
 import anhnd.dtos.OrderDetailDTO;
 import anhnd.dtos.PaymentDTO;
@@ -21,6 +22,7 @@ import anhnd.utils.TextUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -40,6 +42,10 @@ public class CartServlet extends HttpServlet {
     private static final String GUEST_CART = "guest_cart.jsp";
     private static final String VIEW_ORDER = "view_order.jsp";
     private static final String GUEST_CONFIRM_ORDER = "guest_confirm_order.jsp";
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX
+            = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    public static final Pattern VALID_PHONE_REGEX
+            = Pattern.compile("^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$", Pattern.CASE_INSENSITIVE);
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -203,36 +209,56 @@ public class CartServlet extends HttpServlet {
                 String email = request.getParameter("txtEmail");
                 String address = request.getParameter("txtAddress");
                 String phone = request.getParameter("txtPhone");
-                HttpSession session = request.getSession();
-                OrderDAO orderDAO = new OrderDAO();
-                OrderDetailDAO orderDetailDAO = new OrderDetailDAO();
-                PaymentDAO paymentDAO = new PaymentDAO();
-                CakeDAO cakeDAO = new CakeDAO();
-                if (session != null) {
-                    CartBean shop = (CartBean) session.getAttribute("SHOP");
-                    if (shop != null) {
-                        OrderDTO orderDTO = new OrderDTO(TextUtils.getUUID(), email, address, phone, 0, null);
-                        boolean check = orderDAO.insertOrder(orderDTO);
-                        if (check) {
-                            List<CartModel> items = CartUtils.getAllCart(shop);
-                            for (CartModel item : items) {
-                                OrderDetailDTO orderDetailDTO = new OrderDetailDTO(TextUtils.getUUID(), orderDTO.getOrderId(), item.getCakeId(), item.getCakeName(), item.getQuantity(), item.getPrice());
-                                orderDetailDAO.insertOrderDetails(orderDetailDTO);
-                                cakeDAO.updateQuantity(item.getCakeId(), item.getCurrentQuantity() - item.getQuantity());
+                boolean validated = true;
+                String url = VIEW_ORDER;
+                ConfirmOrderError confirmOrderError = new ConfirmOrderError();
+                if (VALID_EMAIL_ADDRESS_REGEX.matcher(email).find() == false) {
+                    validated = false;
+                    confirmOrderError.setEmailError("Email must be valid");
+                }
+                if (address.equals("")) {
+                    validated = false;
+                    confirmOrderError.setAddressError("Address cannot be blank");
+                }
+                if (VALID_PHONE_REGEX.matcher(phone).find() == false) {
+                    validated = false;
+                    confirmOrderError.setPhoneError("Phone must be valid");
+                }
+                if (validated == false) {
+                    request.setAttribute("ERROR", confirmOrderError);
+                    url = GUEST_CONFIRM_ORDER;
+                } else {
+                    HttpSession session = request.getSession();
+                    OrderDAO orderDAO = new OrderDAO();
+                    OrderDetailDAO orderDetailDAO = new OrderDetailDAO();
+                    PaymentDAO paymentDAO = new PaymentDAO();
+                    CakeDAO cakeDAO = new CakeDAO();
+                    if (session != null) {
+                        CartBean shop = (CartBean) session.getAttribute("SHOP");
+                        if (shop != null) {
+                            OrderDTO orderDTO = new OrderDTO(TextUtils.getUUID(), email, address, phone, 0, null);
+                            boolean check = orderDAO.insertOrder(orderDTO);
+                            if (check) {
+                                List<CartModel> items = CartUtils.getAllCart(shop);
+                                for (CartModel item : items) {
+                                    OrderDetailDTO orderDetailDTO = new OrderDetailDTO(TextUtils.getUUID(), orderDTO.getOrderId(), item.getCakeId(), item.getCakeName(), item.getQuantity(), item.getPrice());
+                                    orderDetailDAO.insertOrderDetails(orderDetailDTO);
+                                    cakeDAO.updateQuantity(item.getCakeId(), item.getCurrentQuantity() - item.getQuantity());
+                                }
+                                PaymentDTO paymentDTO = new PaymentDTO(TextUtils.getUUID(), orderDTO.getOrderId(), 0, Constant.CASH);
+                                paymentDAO.insertPayment(paymentDTO);
                             }
-                            PaymentDTO paymentDTO = new PaymentDTO(TextUtils.getUUID(), orderDTO.getOrderId(), 0, Constant.CASH);
-                            paymentDAO.insertPayment(paymentDTO);
+                            session.removeAttribute("SHOP");
+                            OrderDTO savedOrder = orderDAO.getOrderById(orderDTO.getOrderId());
+                            List<OrderDetailDTO> detailOfOrder = orderDetailDAO.getDetailsOfOrder(orderDTO.getOrderId());
+                            PaymentDTO paymentDTO = paymentDAO.getPaymentByOrderId(orderDTO.getOrderId());
+                            request.setAttribute("ORDER", savedOrder);
+                            request.setAttribute("ORDERDETAILS", detailOfOrder);
+                            request.setAttribute("PAYMENT", paymentDTO);
                         }
-                        session.removeAttribute("SHOP");
-                        OrderDTO savedOrder = orderDAO.getOrderById(orderDTO.getOrderId());
-                        List<OrderDetailDTO> detailOfOrder = orderDetailDAO.getDetailsOfOrder(orderDTO.getOrderId());
-                        PaymentDTO paymentDTO = paymentDAO.getPaymentByOrderId(orderDTO.getOrderId());
-                        request.setAttribute("ORDER", savedOrder);
-                        request.setAttribute("ORDERDETAILS", detailOfOrder);
-                        request.setAttribute("PAYMENT", paymentDTO);
                     }
                 }
-                RequestDispatcher rd = request.getRequestDispatcher(VIEW_ORDER);
+                RequestDispatcher rd = request.getRequestDispatcher(url);
                 rd.forward(request, response);
             }
         } catch (Exception e) {
