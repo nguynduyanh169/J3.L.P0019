@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -28,6 +29,7 @@ public class SearchCakeServlet extends HttpServlet {
     private static final String HOME_PAGE = "home.jsp";
     private static final String MEMBER_HOME = "member_home.jsp";
     private static final String ADMIN_HOME = "admin_manage_cake.jsp";
+    private static final Logger LOG = Logger.getLogger(SearchCakeServlet.class.getName());
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -77,17 +79,17 @@ public class SearchCakeServlet extends HttpServlet {
                 System.out.println("Page No: " + pageIndex + "Total: " + endPage);
                 session.setAttribute("CAKES", cakes);
                 session.setAttribute("CATEGORIES", categories);
-                if (categoryId != null || categoryId != "") {
+                if (categoryId != null || !"".equals(categoryId)) {
                     session.setAttribute("SELECTCATEGORY", categoryId);
                 }
                 session.setAttribute("TOTALPAGE", endPage);
             } else {
-                int countCakeByName = cakeDAO.countCakeByLikeName(searchName, categoryId == "" ? null : categoryId, Float.parseFloat(fromPrice), Float.parseFloat(toPrice));
+                int countCakeByName = cakeDAO.countCakeByLikeName(searchName, "".equals(categoryId) ? null : categoryId, Float.parseFloat(fromPrice), Float.parseFloat(toPrice));
                 endPage = countCakeByName / pageSize;
                 if (countCakeByName % pageSize != 0) {
                     endPage++;
                 }
-                List<CakeDTO> cakes = cakeDAO.getCakeByLikeName(searchName, pageIndex, pageSize, categoryId == "" ? null : categoryId, Float.parseFloat(fromPrice), Float.parseFloat(toPrice));
+                List<CakeDTO> cakes = cakeDAO.getCakeByLikeName(searchName, pageIndex, pageSize, "".equals(categoryId) ? null : categoryId, Float.parseFloat(fromPrice), Float.parseFloat(toPrice));
                 List<CakeCategoryDTO> categories = cakeCategoryDAO.getCakeCategories();
                 HttpSession session = request.getSession();
                 session.setAttribute("CAKES", cakes);
@@ -98,7 +100,7 @@ public class SearchCakeServlet extends HttpServlet {
                 session.setAttribute("TOTALPAGE", endPage);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("SearchCakeServlet Exception: " + e.getMessage());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

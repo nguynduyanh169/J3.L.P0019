@@ -30,7 +30,7 @@
             <h1>Welcome Guest!</h1>
              <br/>
             <c:url var="viewCartLink" value="cart">
-                <c:param name="action" value="Guest view cart"/>
+                <c:param name="action" value="Guest_View_Cart"/>
             </c:url>         
             <a href="${viewCartLink}">View Cart</a>
             <br/>
@@ -95,7 +95,7 @@
                                     <c:param name="cakeName" value="${dto.cakeName}"/>
                                     <c:param name="price" value="${dto.price}"/>
                                     <c:param name="quantity" value="${dto.quantity}"/>
-                                    <c:param name="action" value="Guest add to cart"/>
+                                    <c:param name="action" value="Guest_Add_To_Cart"/>
                                 </c:url>
                                <td><a href="${addToCartLink}">Add To Cart</a></td>
                             </tr>

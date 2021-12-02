@@ -29,7 +29,7 @@ public class FilterDispactcher implements Filter {
     private static final boolean debug = true;
     private static final String LOGIN_PAGE = "login.html";
     private static final String HOME_PAGE = "home.jsp";
-    private static Logger log = Logger.getLogger(FilterDispactcher.class.getName());
+    private static final Logger LOG = Logger.getLogger(FilterDispactcher.class.getName());
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
@@ -146,7 +146,7 @@ public class FilterDispactcher implements Filter {
                 chain.doFilter(request, response);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Filter Exception: " + e.toString());
         }
     }
 

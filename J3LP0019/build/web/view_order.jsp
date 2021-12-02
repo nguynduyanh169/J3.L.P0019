@@ -59,6 +59,7 @@
                 </c:forEach>
             </tbody>
         </table>
-
+        <br/>
+        <a style="margin-bottom: 50px" href="${pageContext.request.contextPath}/searchCake?&searchName=&fromPrice=&toPrice=&urlForward=Search_Member">Back To Home</a>
     </body>
 </html>

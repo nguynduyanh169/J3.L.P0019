@@ -1,6 +1,6 @@
 <%-- 
-    Document   : view_order
-    Created on : Dec 1, 2021, 12:17:10 PM
+    Document   : guest_view_order
+    Created on : Dec 2, 2021, 7:33:09 PM
     Author     : anhnd
 --%>
 
@@ -60,6 +60,6 @@
             </tbody>
         </table>
         <br/>
-        <a style="margin-bottom: 50px" href="${pageContext.request.contextPath}/searchCake?&searchName=&fromPrice=&toPrice=&urlForward=Search_Member">Back To Home</a>
+        <a style="margin-bottom: 50px" href="${pageContext.request.contextPath}/searchCake?&searchName=&fromPrice=&toPrice=&urlForward=Search_Home">Back To Home</a>
     </body>
 </html>

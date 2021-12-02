@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -41,11 +42,13 @@ public class CartServlet extends HttpServlet {
     private static final String MEMBER_CART = "member_cart.jsp";
     private static final String GUEST_CART = "guest_cart.jsp";
     private static final String VIEW_ORDER = "view_order.jsp";
+    private static final String GUEST_VIEW_ORDER = "guest_view_order.jsp";
     private static final String GUEST_CONFIRM_ORDER = "guest_confirm_order.jsp";
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX
             = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
     public static final Pattern VALID_PHONE_REGEX
             = Pattern.compile("^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$", Pattern.CASE_INSENSITIVE);
+    private static final Logger LOG = Logger.getLogger(CartServlet.class.getName());
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -62,7 +65,7 @@ public class CartServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             String action = request.getParameter("action");
-            if (action.equals("Add to cart")) {
+            if (action.equals("Add_To_Cart")) {
                 HttpSession session = request.getSession(true);
                 CartBean shop = (CartBean) session.getAttribute("SHOP");
                 if (shop == null) {
@@ -77,7 +80,7 @@ public class CartServlet extends HttpServlet {
                 session.setAttribute("SHOP", shop);
                 RequestDispatcher rd = request.getRequestDispatcher(MEMBER_HOME);
                 rd.forward(request, response);
-            } else if (action.equals("Guest add to cart")) {
+            } else if (action.equals("Guest_Add_To_Cart")) {
                 HttpSession session = request.getSession(true);
                 CartBean shop = (CartBean) session.getAttribute("SHOP");
                 if (shop == null) {
@@ -92,13 +95,35 @@ public class CartServlet extends HttpServlet {
                 session.setAttribute("SHOP", shop);
                 RequestDispatcher rd = request.getRequestDispatcher(GUEST_HOME);
                 rd.forward(request, response);
-            } else if (action.equals("View cart")) {
-                RequestDispatcher rd = request.getRequestDispatcher(MEMBER_CART);
+            } else if (action.equals("View_Cart")) {
+                String url = MEMBER_HOME;
+                HttpSession session = request.getSession();
+                float totalPrice = 0;
+                if (session != null) {
+                    CartBean shop = (CartBean) session.getAttribute("SHOP");
+                    if (shop != null) {
+                        url = MEMBER_CART;
+                        totalPrice = shop.caculateTotalPrice();
+                    }
+                }
+                request.setAttribute("TOTALPRICE", totalPrice);
+                RequestDispatcher rd = request.getRequestDispatcher(url);
                 rd.forward(request, response);
-            } else if (action.equals("Guest view cart")) {
-                RequestDispatcher rd = request.getRequestDispatcher(GUEST_CART);
+            } else if (action.equals("Guest_View_Cart")) {
+                String url = GUEST_HOME;
+                float totalPrice = 0;
+                HttpSession session = request.getSession();
+                if (session != null) {
+                    CartBean shop = (CartBean) session.getAttribute("SHOP");
+                    if (shop != null) {
+                        url = GUEST_CART;
+                        totalPrice = shop.caculateTotalPrice();
+                    }
+                }
+                request.setAttribute("TOTALPRICE", totalPrice);
+                RequestDispatcher rd = request.getRequestDispatcher(url);
                 rd.forward(request, response);
-            } else if (action.equals("Confirm order")) {
+            } else if (action.equals("Confirm_Order")) {
                 String url = GUEST_CONFIRM_ORDER;
                 HttpSession session = request.getSession();
                 CartBean shop = (CartBean) session.getAttribute("SHOP");
@@ -114,14 +139,14 @@ public class CartServlet extends HttpServlet {
                     }
                     if (checkQuantity) {
                         request.setAttribute("QUANTITYERROR", "The quantity of " + cakeName + " is not enough to order!");
-                        url = "CartServlet?action=Guest view cart";
+                        url = "CartServlet?action=Guest_View_Cart";
                     }
                 }
                 RequestDispatcher rd = request.getRequestDispatcher(url);
                 rd.forward(request, response);
             } else if (action.equals("Remove")) {
                 String cakeId = request.getParameter("cakeId");
-                String url = "CartServlet?action=View cart";
+                String url = "CartServlet?action=View_Cart";
                 if (cakeId != null) {
                     HttpSession session = request.getSession();
                     if (session != null) {
@@ -132,9 +157,8 @@ public class CartServlet extends HttpServlet {
                             session.setAttribute("SHOP", shop);
                         }
                         if (account == null) {
-                            url = "CartServlet?action=Guest view cart";
+                            url = "CartServlet?action=Guest_View_Cart";
                         }
-
                     }
                 }
                 RequestDispatcher rd = request.getRequestDispatcher(url);
@@ -142,7 +166,7 @@ public class CartServlet extends HttpServlet {
             } else if (action.equals("Update")) {
                 String cakeId = request.getParameter("cakeId");
                 String newQuantity = request.getParameter("txtQuantity");
-                String url = "CartServlet?action=View cart";
+                String url = "CartServlet?action=View_Cart";
                 HttpSession session = request.getSession();
                 if (session != null) {
                     AccountDTO account = (AccountDTO) session.getAttribute("ACCOUNT");
@@ -152,7 +176,7 @@ public class CartServlet extends HttpServlet {
                         session.setAttribute("SHOP", shop);
                     }
                     if (account == null) {
-                        url = "CartServlet?action=Guest view cart";
+                        url = "CartServlet?action=Guest_View_Cart";
                     }
                 }
                 RequestDispatcher rd = request.getRequestDispatcher(url);
@@ -178,7 +202,7 @@ public class CartServlet extends HttpServlet {
                         }
                         if (checkQuantity) {
                             request.setAttribute("QUANTITYERROR", "The quantity of " + cakeName + " is not enough to order!");
-                            url = "CartServlet?action=View cart";
+                            url = "CartServlet?action=View_Cart";
                         } else {
                             AccountDTO account = (AccountDTO) session.getAttribute("ACCOUNT");
                             OrderDTO orderDTO = new OrderDTO(TextUtils.getUUID(), account.getEmail(), account.getAddress(), account.getPhone(), 0, null);
@@ -205,12 +229,12 @@ public class CartServlet extends HttpServlet {
                 }
                 RequestDispatcher rd = request.getRequestDispatcher(url);
                 rd.forward(request, response);
-            } else if (action.equals("Guest order")) {
+            } else if (action.equals("Guest_Order")) {
                 String email = request.getParameter("txtEmail");
                 String address = request.getParameter("txtAddress");
                 String phone = request.getParameter("txtPhone");
                 boolean validated = true;
-                String url = VIEW_ORDER;
+                String url = GUEST_VIEW_ORDER;
                 ConfirmOrderError confirmOrderError = new ConfirmOrderError();
                 if (VALID_EMAIL_ADDRESS_REGEX.matcher(email).find() == false) {
                     validated = false;
@@ -262,7 +286,7 @@ public class CartServlet extends HttpServlet {
                 rd.forward(request, response);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("CartServlet Exception: " + e.getMessage());
         } finally {
 
             out.close();

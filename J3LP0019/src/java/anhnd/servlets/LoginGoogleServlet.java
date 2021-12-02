@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
  */
 public class LoginGoogleServlet extends HttpServlet {
 
-    private static Logger log = Logger.getLogger(LoginGoogleServlet.class.getName());
+    private static Logger LOG = Logger.getLogger(LoginGoogleServlet.class.getName());
     private static final String MEMBER_HOME = "member_home.jsp";
     private static final String ADMIN_MANAGE_PRODUCT = "admin_manage_cake.jsp";
     private static final String INVALID_PAGE = "invalid.html";
@@ -78,7 +78,7 @@ public class LoginGoogleServlet extends HttpServlet {
                 }
             }
         } catch (Exception e) {
-            log.error("LoginGoogleServlet_Exception " + e.getMessage());
+            LOG.error("LoginGoogleServlet_Exception " + e.getMessage());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

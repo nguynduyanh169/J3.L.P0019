@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -38,6 +39,7 @@ public class CreateCakeServlet extends HttpServlet {
 
     private static final String CREATE_CAKE = "admin_create_cake.jsp";
     private static final String ADMIN_MANAGE = "admin_manage_cake.jsp";
+    private static final Logger LOG = Logger.getLogger(CreateCakeServlet.class.getName());
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -86,10 +88,10 @@ public class CreateCakeServlet extends HttpServlet {
                 }
             }
             if (!priceStr.equals("")) {
-                if (Float.parseFloat(priceStr) < 0) {
+                if (Float.parseFloat(priceStr) < 1000) {
                     foundErr = true;
-                }
-                errObj.setPriceLowerThanZero("Price cannot be lower than 0");
+                    errObj.setPriceLowerThanZero("Price cannot be lower than 1000d");
+                } 
             }
             if (expirationDate.equals("")) {
                 foundErr = true;
@@ -140,7 +142,7 @@ public class CreateCakeServlet extends HttpServlet {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("CreateCakeServlet Exception: " + e.getMessage());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

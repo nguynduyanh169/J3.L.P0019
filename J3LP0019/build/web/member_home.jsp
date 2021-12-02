@@ -33,7 +33,7 @@
             <h1>Welcome <c:out value="${sessionScope.ACCOUNT.fullName}"/>!</h1>
             <br/>
             <c:url var="viewCartLink" value="cart">
-                <c:param name="action" value="View cart"/>
+                <c:param name="action" value="View_Cart"/>
             </c:url>         
             <a href="${viewCartLink}">View Cart</a>
             <br/>
@@ -104,7 +104,7 @@
                                     <c:param name="cakeName" value="${dto.cakeName}"/>
                                     <c:param name="price" value="${dto.price}"/>
                                     <c:param name="quantity" value="${dto.quantity}"/>
-                                    <c:param name="action" value="Add to cart"/>
+                                    <c:param name="action" value="Add_To_Cart"/>
                                 </c:url>
                                 <td><a href="${addToCartLink}">Add To Cart</a></td>
                             </tr>

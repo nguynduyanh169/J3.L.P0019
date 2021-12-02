@@ -29,6 +29,7 @@
         <h1>Your Shopping Cart!</h1>
         <c:set var="shop" value="${sessionScope.SHOP}"/>
         <c:set var="errorMsg" value="${requestScope.QUANTITYERROR}"/>
+        <c:set var="totalPrice" value="${requestScope.TOTALPRICE}"/>
         <c:if test="${not empty shop}">
             <table border="1">
                 <thead>
@@ -47,12 +48,15 @@
                                     <input type="hidden" name="cakeId" value="${rows.value.cakeId}"/>
                                     <input type="number" name="txtQuantity" min="1" required value="${rows.value.quantity}">
                                     <input type="submit" value="Update" name="action"/> 
-                                    <button href="${pageContext.request.contextPath}/CartServlet?action=Remove&cakeId=${rows.value.cakeId}" onclick="return confirmDelete(this)" name="action" value="Remove" >Remove</button></form></td>
-
+                                    <button onclick="return confirmDelete(this)" name="action" value="Remove" >Remove</button></form></td>
                             <td>${rows.value.price}</td>
                         </tr>
                     </c:forEach>
                     <tr>
+                    </tr>
+                     <tr>
+                        <td colspan="2"></td>
+                        <td>${totalPrice}</td>
                     </tr>
                     <tr>
                         <td colspan="2"></td>

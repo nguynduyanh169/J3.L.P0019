@@ -36,7 +36,7 @@ public class CakeDAO {
             if (connection != null) {
                 if (selectCategoryId == null && fromPrice == 0 && toPrice == 0) {
                     String sql = "Select cakeId, cakeName, imgPath, categoryId, quantity, description, price, createDate, expirationDate, status, createBy from Cake where cakeName"
-                            + " LIKE N'%" + name + "%' and status = 0 order by createDate desc offset ? rows fetch next ? rows only";
+                            + " LIKE N'%" + name + "%' and status = 0 and expirationDate > cast(sysdatetime() as date) order by createDate desc offset ? rows fetch next ? rows only";
                     preparedStatement = connection.prepareStatement(sql);
                     preparedStatement.setInt(1, (pageIndex - 1) * pageSize);
                     preparedStatement.setInt(2, pageSize);
@@ -46,7 +46,7 @@ public class CakeDAO {
                     String sql = "Select cakeId, cakeName, imgPath, categoryId, quantity, description, "
                             + "price, createDate, expirationDate, status, createBy "
                             + "from Cake where cakeName"
-                            + " LIKE N'%" + name + "%' and status = 0 and categoryId = ? "
+                            + " LIKE N'%" + name + "%' and status = 0 and expirationDate > cast(sysdatetime() as date) and categoryId = ? "
                             + "order by createDate desc "
                             + "offset ? rows fetch next ? rows only";
                     preparedStatement = connection.prepareStatement(sql);
@@ -58,7 +58,7 @@ public class CakeDAO {
                     String sql = "Select cakeId, cakeName, imgPath, categoryId, quantity, description, "
                             + "price, createDate, expirationDate, status, createBy "
                             + "from Cake where cakeName"
-                            + " LIKE N'%" + name + "%' and status = 0 and price >= ? and price <= ? and categoryId = ? "
+                            + " LIKE N'%" + name + "%' and status = 0 and expirationDate > cast(sysdatetime() as date) and price >= ? and price <= ? and categoryId = ? "
                             + "order by createDate desc "
                             + "offset ? rows fetch next ? rows only";
                     preparedStatement = connection.prepareStatement(sql);
@@ -110,18 +110,18 @@ public class CakeDAO {
             connection = DBUtils.makeConnection();
             if (connection != null) {
                 if (selectCategoryId == null && fromPrice == 0 && toPrice == 0) {
-                    String sql = "Select count(cakeId) from Cake where cakeName like N'%" + name + "%' and status = 0";
+                    String sql = "Select count(cakeId) from Cake where cakeName like N'%" + name + "%' and status = 0 and expirationDate > cast(sysdatetime() as date)";
                     preparedStatement = connection.prepareStatement(sql);
                     resultSet = preparedStatement.executeQuery();
                 } else if (fromPrice == 0 && toPrice == 0) {
                     String sql = "select count(cakeId) from Cake "
-                            + "where cakeName like N'%" + name + "%' and status = 0 and categoryId = ?";
+                            + "where cakeName like N'%" + name + "%' and status = 0 and categoryId = ? and expirationDate > cast(sysdatetime() as date)";
                     preparedStatement = connection.prepareStatement(sql);
                     preparedStatement.setString(1, selectCategoryId);
                     resultSet = preparedStatement.executeQuery();
                 } else {
                     String sql = "select count(cakeId) from Cake "
-                            + "where cakeName like N'%" + name + "%' and status = 0 and price >= ? and price <= ? and categoryId = ?";
+                            + "where cakeName like N'%" + name + "%' and status = 0 and price >= ? and price <= ? and categoryId = ? and expirationDate > cast(sysdatetime() as date)";
                     preparedStatement = connection.prepareStatement(sql);
                     preparedStatement.setFloat(1, fromPrice);
                     preparedStatement.setFloat(2, toPrice);

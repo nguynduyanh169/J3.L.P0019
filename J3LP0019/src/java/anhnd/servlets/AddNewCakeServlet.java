@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class AddNewCakeServlet extends HttpServlet {
 
+    private static final Logger LOG = Logger.getLogger(AddNewCakeServlet.class.getName());
     private static final String ADMIN_CREATE_CAKE = "admin_create_cake.jsp";
 
     /**
@@ -42,7 +44,7 @@ public class AddNewCakeServlet extends HttpServlet {
             List<CakeCategoryDTO> categories = cakeCategoryDAO.getCakeCategories();
             request.setAttribute("CATEGORIES", categories);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("AddNewCakeServlet Exception: " + e.getMessage());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(ADMIN_CREATE_CAKE);
             rd.forward(request, response);

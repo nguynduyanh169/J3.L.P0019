@@ -19,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 public class GetOrderServlet extends HttpServlet {
 
     private static final String VIEW_ORDER = "view_order.jsp";
+    private static final Logger LOG = Logger.getLogger(GetOrderServlet.class.getName());
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -53,7 +55,7 @@ public class GetOrderServlet extends HttpServlet {
             request.setAttribute("ORDERDETAILS", detailOfOrder);
              request.setAttribute("PAYMENT", paymentDTO);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("GetOrderServlet Exception: " + e.getMessage());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(VIEW_ORDER);
             rd.forward(request, response);

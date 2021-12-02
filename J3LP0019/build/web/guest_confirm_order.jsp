@@ -33,7 +33,7 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input type="submit" name="action" value="Guest order"/> <input type="reset" value="Reset"/></td>
+                            <td><input type="submit" name="action" value="Guest_Order"/> <input type="reset" value="Reset"/></td>
                         </tr>
                     </tbody>
                 </table>
@@ -75,7 +75,7 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input type="submit" name="action" value="Guest order"/> <input type="reset" value="Reset"/></td>
+                            <td><input type="submit" name="action" value="Guest_Order"/> <input type="reset" value="Reset"/></td>
                         </tr>
                     </tbody>
                 </table>

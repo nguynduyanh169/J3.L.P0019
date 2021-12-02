@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -24,7 +25,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class EditCakeServlet extends HttpServlet {
 
-    private static String ADMIN_UPDATE_CAKE = "admin_update_cake.jsp";
+    private static final String ADMIN_UPDATE_CAKE = "admin_update_cake.jsp";
+    private static final Logger LOG = Logger.getLogger(EditCakeServlet.class.getName());
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,7 +50,7 @@ public class EditCakeServlet extends HttpServlet {
             request.setAttribute("CATEGORIES", categories);
             request.setAttribute("EDITCAKE", cakeDTO);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("EditCake Exception: " + e.getMessage());
         } finally{
             RequestDispatcher rd = request.getRequestDispatcher(ADMIN_UPDATE_CAKE);
             rd.forward(request, response);
