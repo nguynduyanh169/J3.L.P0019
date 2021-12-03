@@ -62,8 +62,6 @@ public class SearchCakeServlet extends HttpServlet {
         } else if (url.equals("Search_Home")) {
             url = HOME_PAGE;
         }
-        System.out.println(categoryId);
-        System.out.println("From price: " + fromPrice + "To price: " + toPrice);
         try {
             CakeDAO cakeDAO = new CakeDAO();
             CakeCategoryDAO cakeCategoryDAO = new CakeCategoryDAO();
@@ -76,7 +74,6 @@ public class SearchCakeServlet extends HttpServlet {
                 List<CakeDTO> cakes = cakeDAO.getCakeByLikeName(searchName, pageIndex, pageSize, categoryId == "" ? null : categoryId, 0, 0);
                 List<CakeCategoryDTO> categories = cakeCategoryDAO.getCakeCategories();
                 HttpSession session = request.getSession();
-                System.out.println("Page No: " + pageIndex + "Total: " + endPage);
                 session.setAttribute("CAKES", cakes);
                 session.setAttribute("CATEGORIES", categories);
                 if (categoryId != null || !"".equals(categoryId)) {

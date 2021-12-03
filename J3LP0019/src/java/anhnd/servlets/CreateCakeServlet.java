@@ -125,7 +125,6 @@ public class CreateCakeServlet extends HttpServlet {
                     String fullPathBuild = pathArrBuild[0];
                     fullPathBuild = fullPathBuild.substring(1);
                     String saveCakeImageToBuild = fullPathBuild.replace("/", "\\") + File.separator + "images" + File.separator + fileImageName;
-                    System.out.println(saveCakeImageToBuild);
                     imagePart.write(saveCakeImageToBuild);
                     CakeDTO cakeDTO = new CakeDTO(TextUtils.getUUID(), cakeName, fileImageName, categoryId, quantity, description, price, null, expiration, 0, email);
                     boolean result = cakeDAO.insertCake(cakeDTO);

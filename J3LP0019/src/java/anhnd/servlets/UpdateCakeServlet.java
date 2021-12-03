@@ -93,7 +93,7 @@ public class UpdateCakeServlet extends HttpServlet {
                     foundErr = true;
                     errObj.setPriceLowerThanZero("Price cannot be lower than 1000d");
                 }
-                
+
             }
             if (expirationDate.equals("")) {
                 foundErr = true;
@@ -137,7 +137,6 @@ public class UpdateCakeServlet extends HttpServlet {
                     if (result) {
                         UpdateRecordDTO updateRecordDTO = new UpdateRecordDTO(TextUtils.getUUID(), email, cakeId, null);
                         updateRecordDAO.insertEditCakeHistory(updateRecordDTO);
-                        //url = ADMIN_MANAGE;
                         url = "SearchCakeServlet?searchName=&fromPrice=&toPrice=&urlForward=Search_Admin&btAction=Search";
                     }
                 }
@@ -147,8 +146,7 @@ public class UpdateCakeServlet extends HttpServlet {
                     if (result) {
                         UpdateRecordDTO updateRecordDTO = new UpdateRecordDTO(TextUtils.getUUID(), email, cakeId, null);
                         updateRecordDAO.insertEditCakeHistory(updateRecordDTO);
-                       // url = ADMIN_MANAGE;
-                       url = "SearchCakeServlet?searchName=&fromPrice=&toPrice=&urlForward=Search_Admin&btAction=Search";
+                        url = "SearchCakeServlet?searchName=&fromPrice=&toPrice=&urlForward=Search_Admin&btAction=Search";
                     }
                 }
             }
